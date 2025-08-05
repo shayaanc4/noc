@@ -10,7 +10,6 @@ module router_routing_tb;
     logic [7:0] input_port [0:3];
     logic [PAYLOAD_SIZE*8-1:0] pe_link;
 
-    // DUT: uses hierarchical references internally; no need to expose anything via new ports
     router #(.x(LOGICAL_X), .y(LOGICAL_Y)) dut (
         .clk(clk),
         .rst(rst),
@@ -68,8 +67,6 @@ module router_routing_tb;
         begin
             input_port[port] = b;
             #10;
-            input_port[port] = 8'h00;
-            #1;
         end
     endtask
 
@@ -220,5 +217,6 @@ module router_routing_tb;
         $display("ROUTING TB COMPLETE");
         $finish;
     end
+
 
 endmodule
