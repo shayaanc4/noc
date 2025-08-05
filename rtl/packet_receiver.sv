@@ -46,17 +46,17 @@ module packet_receiver (
 			  valid      <= done_flag;
 
 			  case (state)
-					S_RECV: begin
-						 if (in_byte != 8'h7D) begin
-							  shift_reg <= (shift_reg << 8) | in_byte;
-							  byte_cnt  <= byte_cnt + 1;
-						 end
-					end
-					S_ESCAPE: begin
-						 shift_reg <= (shift_reg << 8) | (in_byte ^ 8'h20);
-						 byte_cnt  <= byte_cnt + 1;
-					end
-					default: byte_cnt <= '0;
+				S_RECV: begin
+					 if (in_byte != 8'h7D) begin
+						  shift_reg <= (shift_reg << 8) | in_byte;
+						  byte_cnt  <= byte_cnt + 1;
+					 end
+				end
+				S_ESCAPE: begin
+					 shift_reg <= (shift_reg << 8) | (in_byte ^ 8'h20);
+					 byte_cnt  <= byte_cnt + 1;
+				end
+				default: byte_cnt <= '0;
 			  endcase
 		 end
 	end
@@ -69,33 +69,32 @@ module packet_receiver (
 		 done_flag  = 1'b0;
 
 		 case (state)
-			  S_IDLE:
-					if (in_byte == 8'h7E) next_state = S_RECV;
+			  S_IDLE: if (in_byte == 8'h7E) next_state = S_RECV;
 
 			  S_RECV: begin
-					if (in_byte == 8'h7D)
-						 next_state = S_ESCAPE;                  ///< escape sequence
-					else if (byte_cnt == PKT_SIZE_BYTES - 1)
-						 next_state = S_CHECK_END;               ///< ready for ending delimiter
-					else if (in_byte == 8'h7E)
-						 next_state = S_IDLE;                    ///< stray delimiter, reset
-					else
-						 next_state = S_RECV;
+				if (in_byte == 8'h7D)
+					 next_state = S_ESCAPE;                  ///< escape sequence
+				else if (byte_cnt == PKT_SIZE_BYTES - 1)
+					 next_state = S_CHECK_END;               ///< ready for ending delimiter
+				else if (in_byte == 8'h7E)
+					 next_state = S_IDLE;                    ///< stray delimiter, reset
+				else
+					 next_state = S_RECV;
 			  end
 
-			  S_ESCAPE:
-					next_state = (byte_cnt == PKT_SIZE_BYTES - 1)
+			  S_ESCAPE: next_state = (byte_cnt == PKT_SIZE_BYTES - 1)
 									 ? S_CHECK_END
 									 : S_RECV;
 
 			  S_CHECK_END:
-					if (in_byte == 8'h7E) begin
-						 next_state = S_IDLE;
-						 done_flag  = 1'b1;       
-					end
+				if (in_byte == 8'h7E) begin
+					 next_state = S_IDLE;
+					 done_flag  = 1'b1;       
+				end
 
 			  default: next_state = S_IDLE;
 		 endcase
 	end
 
 endmodule
+
