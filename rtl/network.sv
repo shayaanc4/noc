@@ -4,7 +4,7 @@ import noc_params::*;
 /// Top-level Network: instantiates a 2D mesh of tiles and connects their ports
 module network(
 	input  logic                 clk,          ///< system clock
-   input  logic                 rst,          ///< asynchronous reset
+   	input  logic                 rst,          ///< asynchronous reset
 
 	// South edge I/O (y = 0)
 	input  logic [7:0]           south_in     [0:MESH_SIZE_X-1],
@@ -90,5 +90,6 @@ module network(
 			end
 		end
 	endgenerate
+
 
 endmodule 
