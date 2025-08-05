@@ -37,17 +37,15 @@ module packet_sender (
 			  shift_reg  <= '0;
 		 end else begin
 			  // latch new packet at start
-			  if (state == S_IDLE && valid_in) begin
-					shift_reg <= {pkt.x_dest, pkt.y_dest, pkt.payload};
-			  end
+			  if (state == S_IDLE && valid_in)
+				shift_reg <= {pkt.x_dest, pkt.y_dest, pkt.payload};
 			  state <= next_state;
 			  
 			  // increment byte index after sending data or escape
-			  if ((state == S_DATA || state == S_ESC) && next_state != S_ESC) begin
-					byte_index <= byte_index + 1;
-			  end else if (state == S_END) begin
-					byte_index <= '0;
-			  end
+			  if ((state == S_DATA || state == S_ESC) && next_state != S_ESC)
+				byte_index <= byte_index + 1;
+			  else if (state == S_END)
+				byte_index <= '0;
 		 end
 	end
 
@@ -63,39 +61,38 @@ module packet_sender (
 		 curr_byte = shift_reg[PKT_SIZE-1 - byte_index*8 -: 8];
 
 		 case (state)
-			  S_IDLE: begin
-					if (valid_in) next_state = S_START;
-			  end
+			  S_IDLE: if (valid_in) next_state = S_START;
 
 			  S_START: begin
-					tx_byte    = 8'h7E;
-					next_state = S_DATA;
+				tx_byte    = 8'h7E;
+				next_state = S_DATA;
 			  end
 
 			  S_DATA: begin
-					if (curr_byte == 8'h7E || curr_byte == 8'h7D) begin
-						 tx_byte    = 8'h7D;
-						 next_state = S_ESC;
-					end else begin
-						 tx_byte    = curr_byte;
-						 next_state = (byte_index == PKT_SIZE_BYTES - 1)
-										  ? S_END : S_DATA;
-					end
+				if (curr_byte == 8'h7E || curr_byte == 8'h7D) begin
+					 tx_byte    = 8'h7D;
+					 next_state = S_ESC;
+				end else begin
+					 tx_byte    = curr_byte;
+					 next_state = (byte_index == PKT_SIZE_BYTES - 1)
+									  ? S_END : S_DATA;
+				end
 			  end
 
 			  S_ESC: begin
-					tx_byte    = curr_byte ^ 8'h20;
-					next_state = (byte_index == PKT_SIZE_BYTES - 1)
-									 ? S_END : S_DATA;
+				tx_byte    = curr_byte ^ 8'h20;
+				next_state = (byte_index == PKT_SIZE_BYTES - 1)
+								 ? S_END : S_DATA;
 			  end
 
 			  S_END: begin
-					tx_byte    = 8'h7E;
-					next_state = S_IDLE;
+				tx_byte    = 8'h7E;
+				next_state = S_IDLE;
 			  end
 
 			  default: next_state = S_IDLE;
 		 endcase
 	end
+
 
 endmodule 
