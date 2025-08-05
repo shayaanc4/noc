@@ -1,15 +1,50 @@
-NoC Router Project
+# NoC Router Project
 
-A SystemVerilog–based network-on-chip communication protocol focused on high-throughput packet data flow—featuring escape-based framing, FIFO buffering, and fixed-priority routing across a scalable 2D mesh, with end-to-end verification via comprehensive testbenches.
+## Overview
 
-📁 Repository Layout
+A SystemVerilog–based network-on-chip (NoC) communication protocol designed for high-throughput, low-overhead packet data flow. It implements:
 
+- **Escape-based framing**: 0x7E start/end, 0x7D escape for in-band control.
+- **FIFO buffering**: per-port input/output queues to decouple traffic bursts.
+- **Fixed-priority arbitration**: simple, deterministic arbitration across multiple input ports.
+- **Scalable 2D mesh**: parameterized `MESH_SIZE_X` and `MESH_SIZE_Y` for arbitrary mesh dimensions.
+- **Processing Element (PE)**: per-tile accumulator demonstrating payload-driven computation.
+
+## Key Components
+
+- **`noc_params.sv`**  
+  Global parameters (packet size, address widths, mesh dimensions).
+
+- **`packet_receiver.sv`**  
+  Parses incoming byte streams into structured packets, applying escape decoding.
+
+- **`packet_sender.sv`**  
+  Serializes packets into byte streams with framing and escape encoding.
+
+- **`fifo_buffer.sv`**  
+  Parameterized circular buffer for packet queuing (configurable depth).
+
+- **`arbiter.sv`**  
+  Fixed-priority multiplexer selecting among buffered inputs.
+
+- **`router.sv`**  
+  Combines receivers, arbiters, and output buffers to route packets based on destination coordinates.
+
+- **`tile.sv`**  
+  Wraps `router` with a simple PE that accumulates incoming payloads.
+
+- **`network.sv`**  
+  Generates a 2D grid of tiles, wiring neighbor ports to form a mesh.
+
+## Repository Layout
+
+```
 .
 ├── LICENSE
 ├── README.md
 ├── .gitignore
 │
-├── src/                   ← all synthesizable RTL
+├── src/
 │   ├── noc_params.sv
 │   ├── packet_receiver.sv
 │   ├── packet_sender.sv
@@ -19,55 +54,34 @@ A SystemVerilog–based network-on-chip communication protocol focused on high-t
 │   ├── tile.sv
 │   └── network.sv
 │
-├── tb/                    ← all your testbenches
+├── tb/
 │   ├── packet_receiver_tb.sv
 │   ├── router_tb.sv
 │   ├── router_routing_tb.sv
 │   ├── network_tb.sv
 │   └── network_advanced_tb.sv
 │
-├── scripts/               ← helper scripts
-│   └── run_sim.sh         ← e.g. ModelSim or Icarus invocation
-│
-└── docs/                  ← design docs, whitepapers
+└── docs/
     └── design_notes.md
+```
 
-🔧 Prerequisites
-	•	ModelSim / Questa or Icarus Verilog for RTL simulation
-	•	Quartus / Vivado / Synplify for FPGA synthesis (optional)
-	•	Unix-style shell for helper scripts
+## Simulation & Testing
 
-🏃 Quickstart (Simulation)
+Use any SystemVerilog simulator (ModelSim, Questa, Icarus) to compile `src/` and `tb/` files. Each testbench verifies end-to-end packet flow:
 
-# from repo root
-chmod +x scripts/run_sim.sh
-scripts/run_sim.sh
+- Packet parsing (framing, escaping)
+- Router arbitration and buffering
+- Mesh connectivity across tiles
 
-You should see all testbenches pass:
-	•	packet_receiver_tb
-	•	router_tb
-	•	router_routing_tb
-	•	network_tb
-	•	network_advanced_tb
+## License
 
-🎯 Project Highlights
-	•	Configurable packet size via noc_params.sv
-	•	Escape-based framing (0x7E start/end, 0x7D escape)
-	•	Fixed-priority arbiter (easily replaceable)
-	•	2D mesh generator for arbitrary MESH_SIZE_X, MESH_SIZE_Y
-	•	Processing element (PE) that accumulates payloads
+This project is released under the MIT License. See [LICENSE](LICENSE) for details.
 
-📜 License
+## Contributing
 
-This code is released under the MIT License. See LICENSE for details.
+Contributions welcome! Please adhere to:
 
-🤝 Contributing
+- 2-space indentation  
+- Doxygen-style comments  
+- Clear separation of combinational and sequential logic  
 
-Feel free to open issues or pull requests. Please follow the existing style:
-	•	2-space indentation
-	•	Doxygen-style comments
-	•	Separate combinational and sequential blocks
-
-⸻
-
-Happy routing! 🚀
