@@ -8,8 +8,8 @@ module router #(
 )(
     input  logic                     		clk,         			///< system clock
     input  logic                     		rst,         			///< asynchronous reset
-    input  logic       [7:0]        		in_bytes   [0:3], 	///< input byte streams: {0:N,1:E,2:S,3:W}
-    output logic       [7:0]        		out_bytes  [0:3], 	///< output byte streams (to neighbors)
+    input  logic       [7:0]        		in_bytes   [0:3], 		///< input byte streams: {0:N,1:E,2:S,3:W}
+    output logic       [7:0]        		out_bytes  [0:3], 		///< output byte streams (to neighbors)
     output logic       [PAYLOAD_SIZE-1:0] pe_link       			///< local payload for this tile
 );
 
@@ -172,5 +172,6 @@ module router #(
         assign out_fifo_rd_en[d] = !out_fifo_empty[d] && !sending_active[d];
       end
     endgenerate
+
 
 endmodule 
