@@ -67,3 +67,18 @@ Use any SystemVerilog simulator (ModelSim, Questa, Icarus) to compile `src/` and
 - Packet parsing (framing, escaping)
 - Router arbitration and buffering
 - Mesh connectivity across tiles
+
+Common features of all testbenches:
+
+1. **Packet Generation**  
+   - `send_packet` tasks frame bytes with start/end markers and escape sequences for 0x7E/0x7D bytes.  
+   - Parametrized destination and payload fields.
+
+2. **Concurrency & Timing**  
+   - `fork/join` constructs to stimulate multiple ports in parallel.  
+   - Randomized inter-packet delays via `$urandom_range` to exercise arbitration and buffer behavior.
+
+3. **Scoreboarding & Coverage**  
+   - Dynamic arrays (`expected_list` or checker tables) store injected packet metadata.  
+   - On each valid output, checkers match observed packets to expected entries, marking them seen.  
+   - Final `check_all_seen` or `check_all` tasks report any missing/mismatched entries and conclude the simulation.
