@@ -40,9 +40,7 @@ A SystemVerilog–based network-on-chip (NoC) communication protocol designed fo
 
 ```
 .
-├── LICENSE
 ├── README.md
-├── .gitignore
 │
 ├── src/
 │   ├── noc_params.sv
@@ -54,15 +52,12 @@ A SystemVerilog–based network-on-chip (NoC) communication protocol designed fo
 │   ├── tile.sv
 │   └── network.sv
 │
-├── tb/
-│   ├── packet_receiver_tb.sv
-│   ├── router_tb.sv
-│   ├── router_routing_tb.sv
-│   ├── network_tb.sv
-│   └── network_advanced_tb.sv
-│
-└── docs/
-    └── design_notes.md
+└── tb/
+    ├── packet_receiver_tb.sv
+    ├── router_tb.sv
+    ├── router_routing_tb.sv
+    ├── network_tb.sv
+    └── network_advanced_tb.sv
 ```
 
 ## Simulation & Testing
