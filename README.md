@@ -1,6 +1,6 @@
 NoC Router Project
 
-This repository contains a simple parameterized 2D mesh network-on-chip (NoC) router design in SystemVerilog, along with verification benches and helper scripts.
+A SystemVerilog–based network-on-chip communication protocol focused on high-throughput packet data flow—featuring escape-based framing, FIFO buffering, and fixed-priority routing across a scalable 2D mesh, with end-to-end verification via comprehensive testbenches.
 
 📁 Repository Layout
 
