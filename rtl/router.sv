@@ -154,7 +154,8 @@ module router #(
 
       if (arb_valid) begin
         // local consumption if this tile's coords match pkt dest coords
-        if (arb_selected_pkt.y_dest == Y_COORD && arb_selected_pkt.x_dest == X_COORD) pe_link = arb_selected_pkt.payload;
+        if (arb_selected_pkt.y_dest == Y_COORD && arb_selected_pkt.x_dest == X_COORD) 
+		pe_link = arb_selected_pkt.payload;
         else begin
           if 		(arb_selected_pkt.y_dest > Y_COORD) out_fifo_wr_en[DIR_N] = 1;
           else if (arb_selected_pkt.y_dest < Y_COORD) out_fifo_wr_en[DIR_S] = 1;
@@ -175,3 +176,4 @@ module router #(
 
 
 endmodule 
+
