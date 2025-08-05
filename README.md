@@ -2,9 +2,10 @@
 
 ## Overview
 
-A SystemVerilog–based network-on-chip (NoC) communication protocol designed for high-throughput, low-overhead packet data flow. It implements:
+A SystemVerilog–based 2D mesh network-on-chip (NoC) communication protocol designed for high-throughput, low-overhead packet data flow over serialized byte streams. It implements:
 
-- **Escape-based framing**: 0x7E start/end, 0x7D escape for in-band control.
+- **Serialized byte streaming**: end-to-end packet transmission and reception via packet_sender and packet_receiver modules, ensuring correct byte ordering and escape encoding.
+- **Escape-based packet framing**: 0x7E start/end, 0x7D escape for in-band control.
 - **FIFO buffering**: per-port input/output queues to decouple traffic bursts.
 - **Fixed-priority arbitration**: simple, deterministic arbitration across multiple input ports.
 - **Scalable 2D mesh**: parameterized `MESH_SIZE_X` and `MESH_SIZE_Y` for arbitrary mesh dimensions.
